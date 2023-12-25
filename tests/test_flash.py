@@ -7,7 +7,6 @@ from pyxlma.lmalib.flash.cluster import cluster_flashes
 from pyxlma.lmalib.flash.properties import *
 
 
-
 def compare_dataarrays(tocheck, truth, var):
     """Compare two dataarrays"""
     if truth[var].data.dtype == 'datetime64[ns]' or truth[var].data.dtype == 'timedelta64[ns]':
@@ -48,6 +47,15 @@ def test_filter_flashes():
     for var in truth.data_vars:
         compare_dataarrays(filtered, truth, var)
 
+
+def test_flilter_flashes_no_prune():
+    dataset = xr.open_dataset('examples/data/lma_netcdf/lma_stats.nc')
+    filtered = filter_flashes(dataset, flash_event_count=(100, 500), prune=False)
+    assert np.all(filtered.event_id.data == dataset.event_id.data)
+    assert np.min(filtered.flash_event_count.data) >= 100
+    assert np.max(filtered.flash_event_count.data) <= 500
+
+
 def test_filter_no_stats():
     """"Test filtering of flashes without flash statistics"""
     dataset = xr.open_dataset('examples/data/lma_netcdf/lma.nc')
@@ -61,6 +69,7 @@ def test_event_area():
     x, y, z = local_cartesian(dataset.event_longitude.data, dataset.event_latitude.data, dataset.event_altitude.data, 
                               dataset.network_center_longitude.data, dataset.network_center_latitude.data, dataset.network_center_altitude.data)
     assert np.isclose(event_hull_area(x, y, z), 5491450433206.501)
+
 
 def test_event_volume():
     dataset = xr.open_dataset('examples/data/lma_netcdf/lma.nc')
