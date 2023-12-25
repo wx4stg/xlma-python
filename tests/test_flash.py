@@ -4,7 +4,7 @@ import xarray as xr
 import numpy as np
 import pytest
 from pyxlma.lmalib.flash.cluster import cluster_flashes
-from pyxlma.lmalib.flash.properties import flash_stats, filter_flashes
+from pyxlma.lmalib.flash.properties import *
 
 
 
@@ -54,3 +54,17 @@ def test_filter_no_stats():
     dataset = cluster_flashes(dataset)
     with pytest.raises(ValueError, match='Before filtering a dataset by flash properties, call flash_stats on the dataset to compute flash properties.'):
         filter_flashes(dataset, flash_event_count=(100, 500))
+
+
+def test_event_area():
+    dataset = xr.open_dataset('examples/data/lma_netcdf/lma.nc')
+    x, y, z = local_cartesian(dataset.event_longitude.data, dataset.event_latitude.data, dataset.event_altitude.data, 
+                              dataset.network_center_longitude.data, dataset.network_center_latitude.data, dataset.network_center_altitude.data)
+    assert np.isclose(event_hull_area(x, y, z), 5491450433206.501)
+
+def test_event_volume():
+    dataset = xr.open_dataset('examples/data/lma_netcdf/lma.nc')
+    x, y, z = local_cartesian(dataset.event_longitude.data, dataset.event_latitude.data, dataset.event_altitude.data, 
+                              dataset.network_center_longitude.data, dataset.network_center_latitude.data, dataset.network_center_altitude.data)
+    assert np.isclose(event_hull_volume(x[0:10], y[0:10], z[0:10]), 56753729942.624825)
+    
