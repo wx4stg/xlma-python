@@ -2,6 +2,7 @@
 
 import xarray as xr
 import numpy as np
+import pytest
 from pyxlma.lmalib.flash.cluster import cluster_flashes
 from pyxlma.lmalib.flash.properties import flash_stats, filter_flashes
 
@@ -38,9 +39,18 @@ def test_flash_stats():
 def test_filter_flashes():
     """Test filtering of flashes"""
     dataset = xr.open_dataset('examples/data/lma_netcdf/lma_stats.nc')
-    filtered = filter_flashes(dataset, flash_event_count=(100, None))
+    filtered = filter_flashes(dataset, flash_event_count=(100, 500))
     assert np.min(filtered.flash_event_count.data) >= 100
+    assert np.max(filtered.flash_event_count.data) <= 500
+
     truth = xr.open_dataset('examples/data/lma_netcdf/lma_filtered.nc')
 
     for var in truth.data_vars:
         compare_dataarrays(filtered, truth, var)
+
+def test_filter_no_stats():
+    """"Test filtering of flashes without flash statistics"""
+    dataset = xr.open_dataset('examples/data/lma_netcdf/lma.nc')
+    dataset = cluster_flashes(dataset)
+    with pytest.raises(ValueError, match='Before filtering a dataset by flash properties, call flash_stats on the dataset to compute flash properties.'):
+        filter_flashes(dataset, flash_event_count=(100, 500))
