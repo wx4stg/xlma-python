@@ -1,4 +1,4 @@
-"""Test functionality of pyxlma.io"""
+"""Test functionality of pyxlma.lmalib.io"""
 
 from os import listdir
 from datetime import datetime as dt
