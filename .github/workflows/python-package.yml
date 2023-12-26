@@ -37,13 +37,16 @@ jobs:
         micromamba activate base
         coverage run --source=pyxlma -m pytest --mpl --mpl-baseline-path=tests/truth/images/ --mpl-generate-summary=html,json --mpl-results-path=tests/mpl-results/ tests/
         coverage xml
-        zip -r mpl-results.zip tests/mpl-results/
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-    - name: Archive matplotlib test results
+    - name: Zip matplotlib test results
+      if: always()
+      run: |
+        zip -r mpl-results.zip tests/mpl-results/
+    - name: Upload matplotlib test results
       if: always()
       uses: actions/upload-artifact@v3
       with:
