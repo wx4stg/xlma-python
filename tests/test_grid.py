@@ -5,7 +5,7 @@ from tests.test_flash import compare_dataarrays
 
 def test_create_regular_grid():
     """Test creation of regular grid"""
-    dataset = xr.open_dataset('examples/data/lma_netcdf/lma_stats.nc')
+    dataset = xr.open_dataset('tests/truth/lma_netcdf/lma_stats.nc')
     grid_range = 0.5
     grid_h_res = 0.1
     grid_height = 20
@@ -27,12 +27,12 @@ def test_create_regular_grid():
         'grid_time_edge':'grid_time',
     }
     empty_grid = create_regular_grid(grid_edge_ranges, grid_center_names)
-    xr.testing.assert_equal(empty_grid, xr.open_dataset('examples/data/lma_netcdf/empty_grid.nc'))
+    xr.testing.assert_equal(empty_grid, xr.open_dataset('tests/truth/lma_netcdf/empty_grid.nc'))
 
 def test_assign_regular_bins():
     """Test assigning lightning data to regular bins"""
-    empty_grid = xr.open_dataset('examples/data/lma_netcdf/empty_grid.nc')
-    dataset = xr.open_dataset('examples/data/lma_netcdf/lma_stats.nc')
+    empty_grid = xr.open_dataset('tests/truth/lma_netcdf/empty_grid.nc')
+    dataset = xr.open_dataset('tests/truth/lma_netcdf/lma_stats.nc')
     event_coord_names = {
                 'event_longitude':'grid_longitude_edge',
                 'event_latitude':'grid_latitude_edge',
@@ -40,7 +40,7 @@ def test_assign_regular_bins():
                 'event_time':'grid_time_edge',
             }
     binned_grid = assign_regular_bins(empty_grid, dataset, event_coord_names, append_indices=True)
-    truth = xr.open_dataset('examples/data/lma_netcdf/binned_grid.nc')
+    truth = xr.open_dataset('tests/truth/lma_netcdf/binned_grid.nc')
 
     for var in truth.data_vars:
         compare_dataarrays(binned_grid, truth, var)
@@ -48,8 +48,8 @@ def test_assign_regular_bins():
 
 def test_events_to_grid():
     """Test gridding lightning data"""
-    empty_grid = xr.open_dataset('examples/data/lma_netcdf/empty_grid.nc')
-    dataset = xr.open_dataset('examples/data/lma_netcdf/lma_stats.nc')
+    empty_grid = xr.open_dataset('tests/truth/lma_netcdf/empty_grid.nc')
+    dataset = xr.open_dataset('tests/truth/lma_netcdf/lma_stats.nc')
     event_coord_names = {
                 'event_longitude':'grid_longitude_edge',
                 'event_latitude':'grid_latitude_edge',
@@ -63,7 +63,7 @@ def test_events_to_grid():
 
     gridded_lma = events_to_grid(binned_grid, empty_grid, pixel_id_var='pixel_id', event_spatial_vars=event_spatial_vars, grid_spatial_coords=grid_spatial_coords)
 
-    truth = xr.open_dataset('examples/data/lma_netcdf/gridded_lma.nc')
+    truth = xr.open_dataset('tests/truth/lma_netcdf/gridded_lma.nc')
 
     for var in truth.data_vars:
         compare_dataarrays(gridded_lma, truth, var)

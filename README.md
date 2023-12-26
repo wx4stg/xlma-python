@@ -33,6 +33,7 @@ Plotting:
 
 - matplotlib
 - cartopy
+- metpy (optionally, for US county lines)
 
 Interactive:
 
@@ -43,6 +44,7 @@ Building:
 
 - setuptools
 - pytest-cov
+- pytest-mpl
 - ...and all of the above
 
 # Technical architecture

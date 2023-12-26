@@ -4,7 +4,7 @@ import numpy as np
 from datetime import datetime as dt
 
 def test_subset():
-    lma = xr.open_dataset('examples/data/lma_netcdf/lma.nc')
+    lma = xr.open_dataset('tests/truth/lma_netcdf/lma.nc')
     lon_subset, lat_subset, alt_subset, time_subset, selection = subset(lma.event_longitude.data, lma.event_latitude.data, lma.event_altitude.data,
                                                                     lma.event_time.data, lma.event_chi2.data, lma.event_stations.data,
                                                                     (-101.7, -101.4), (33.4, 34.8), (0, 3000), 
@@ -27,7 +27,7 @@ def test_color_by_time_datetime():
 
 
 def test_setup_hist():
-    lma = xr.open_dataset('examples/data/lma_netcdf/lma.nc')
+    lma = xr.open_dataset('tests/truth/lma_netcdf/lma.nc')
     alt_lon, alt_lat, alt_time, lat_lon = setup_hist(lma.event_longitude.data, lma.event_latitude.data, lma.event_altitude.data,
                                                      lma.event_time.data, 2, 2, 2, 2)
     
