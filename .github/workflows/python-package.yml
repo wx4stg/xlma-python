@@ -29,13 +29,13 @@ jobs:
         "${SHELL}" <(curl -L micro.mamba.pm/install.sh)
         eval "$(micromamba shell hook --shell bash)"
         micromamba activate base
-        micromamba install pytest-cov xarray netcdf4 pandas numpy scikit-learn scipy pyproj cartopy python=${{ matrix.python-version }} -c conda-forge
+        micromamba install pytest-cov xarray netcdf4 pandas numpy scikit-learn scipy pyproj cartopy metpy python=${{ matrix.python-version }} -c conda-forge
         python -m pip install .
     - name: Test with pytest
       run: |
         eval "$(micromamba shell hook --shell bash)"
         micromamba activate base
-        coverage run --source=pyxlma -m pytest tests/
+        coverage run --source=pyxlma -m pytest --mpl --mpl-baseline-path=tests/truth/images/ tests/
         coverage xml
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
