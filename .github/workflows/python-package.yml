@@ -41,14 +41,9 @@ jobs:
       uses: codecov/codecov-action@v3
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
-    - name: Zip matplotlib test results
-      if: always()
-      run: |
-        zip -r mpl-results.zip tests/mpl-results/
     - name: Upload matplotlib test results
       if: always()
       uses: actions/upload-artifact@v3
       with:
-        name: code-coverage-report
-        path: mpl-results.zip
+        name: matplotlib-results
+        path: tests/mpl-results/
