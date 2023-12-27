@@ -38,6 +38,7 @@ Plotting:
 Interactive:
 
 - jupyterlab (or, notebook)
+- ipywidgets
 - ipympl
 
 Building:
