@@ -21,6 +21,8 @@ jobs:
         init-shell: bash
     - name: Build with mkdocs
       run: |
+        eval "$(micromamba shell hook --shell bash)"
+        micromamba activate pyxlma-docs
         mkdocs build
     - name: Upload static site artifact
       id: upload
